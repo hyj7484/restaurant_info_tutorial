@@ -1,5 +1,7 @@
 package com.restaurant.service;
 
-public class LoginService {
+import com.restaurant.form.LoginForm;
 
+public interface LoginService {
+	public boolean login(LoginForm loginForm) throws Exception;
 }
