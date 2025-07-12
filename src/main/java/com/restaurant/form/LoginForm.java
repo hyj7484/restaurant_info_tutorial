@@ -14,4 +14,6 @@ public class LoginForm {
 	private int permission;
 	//　エラー内容 
 	private String[] loginErrors;
+	// エラーチェック
+	private boolean error;
 }

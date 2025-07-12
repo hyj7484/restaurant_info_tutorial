@@ -1,22 +1,71 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>メインページ</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<title>식당 목록</title>
 	<style>
 		body {
-			font-family: 'Noto Sans JP', sans-serif;
+			font-family: 'Arial', sans-serif;
+			padding: 20px;
+			background-color: #f7f7f7;
+		}
+
+		h1 {
+			color: #333;
+		}
+
+		.restaurant-card {
+			background: #fff;
+			padding: 15px;
+			margin: 10px 0;
+			border-radius: 8px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.restaurant-card h2 {
+			margin: 0;
+			font-size: 1.5em;
+			color: #222;
+		}
+
+		.restaurant-card p {
+			margin: 5px 0;
+			color: #555;
 		}
 	</style>
 </head>
 
-<body class="bg-light">
-	<div class="container">
-		メインページ
+<body>
+	<h1>店リスト</h1>
+
+	<div th:if="${restaurantForm.empty}">
+		<p>登録されている店が存在しません。</p>
 	</div>
+
+	<div th:each="restaurant : ${restaurantForm.restaurantDtoList}" class="restaurant-card">
+		<div class="row g-0 align-items-center">
+			<div class="col-md-8">
+				<div class="card-body">
+					<h2 class="card-title" th:text="${restaurant.storeName}" />
+					<p class="card-text"><strong>住所:</strong> <span th:text="${restaurant.address}" /></p>
+					<p class="card-text"><strong>連絡先:</strong> <span th:text="${restaurant.phone}" /></p>
+
+					<p class="card-text">
+						<strong>営業時間:</strong>
+						<span th:text="${restaurant.businessTimeStart}" /> ~
+						<span th:text="${restaurant.businessTimeEnd}" />
+					</p>
+					<div class="col-md-4 text-end">
+						<img th:src="${restaurant.storeImage != null ? restaurant.storeImage : '/images/default.jpg'}"
+						     class="img-fluid rounded-end" alt="店イメージ"
+						     style="max-height: 150px; object-fit: cover;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <p><strong>카테고리:</strong> <span th:text="${restaurant.category}">한식/중식 등</span></p> -->
 </body>
 
 </html>
