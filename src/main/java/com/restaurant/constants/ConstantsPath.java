@@ -13,5 +13,11 @@ public interface ConstantsPath {
 	
 	public static final String REGISTER = "register";
 	
-	public static final String  EDITRESTAURANT = "editRestaurant";
+	public static final String EDITRESTAURANT = "editRestaurant";
+	
+	public static final String MENU = "menu";
+	
+	public static final String ADDMENU = "addMenu";
+	
+	public static final String REDIRECT_MENU = "redirect:/menu/";
 }

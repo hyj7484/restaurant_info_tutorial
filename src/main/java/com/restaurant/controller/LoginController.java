@@ -21,7 +21,7 @@ public class LoginController {
 	@Autowired
 	LoginService service;
 	
-	@GetMapping("/login")
+	@GetMapping(value={"/login"})
 	public String init(@ModelAttribute LoginForm loginForm, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("id") != null) {

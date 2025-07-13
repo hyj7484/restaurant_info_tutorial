@@ -9,12 +9,12 @@
 
 <body>
 	<div class="container mt-5">
-		<h2 class="mb-4">新しい店を登録</h2>
+		<h2 class="mb-4">新しいメニューを登録</h2>
 
-		<form th:action="@{/restaurant/new}" method="post" enctype="multipart/form-data" th:object="${restaurantForm.storeDto}">
+		<form th:action="@{/menu/new}" method="post" enctype="multipart/form-data" th:object="${menuForm.menuDto}">
 		  <div class="mb-3">
 		    <label class="form-label">店名</label>
-		    <input type="text" class="form-control" th:field="*{storeName}" required>
+		    <span type="text" class="form-control" th:text="${menuForm.storeDto.storeName}" />
 		  </div>
 
 		  <div class="mb-3">
@@ -24,7 +24,7 @@
 		  
 		  <div class="mb-3">
 		    <label class="form-label">連絡先</label>
-		    <input type="text" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" class="form-control" th:field="*{phone}" required>
+		    <input type="text" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}" class="form-control" th:field="*{phone}" required>
 		  </div>
 
 		  <div class="row mb-3">

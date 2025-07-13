@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>メニュー一覧</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<style>
+		body {
+			background-color: #f8f9fa;
+			padding: 20px;
+			font-family: 'Arial', sans-serif;
+		}
+
+		.menu-card {
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+			margin-bottom: 20px;
+			padding: 15px;
+		}
+
+		.menu-image {
+			max-height: 120px;
+			object-fit: cover;
+			border-radius: 8px;
+		}
+
+		.menu-name {
+			font-size: 1.25rem;
+			font-weight: 700;
+		}
+
+		.menu-description {
+			color: #666;
+		}
+
+		.menu-price {
+			font-weight: 600;
+			color: #28a745;
+			font-size: 1.1rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-start mb-3">
+			<div class="col-md-3">
+				<h1>メニュー一覧</h1>
+				<h5 class="pt-3" th:text="${menuForm.storeDto.storeName}"/>
+			</div>
+			<div class="pt-1">
+				<a th:if="${menuForm.permission == 1}" th:href="@{/menu/new/{storeId}(storeId=${menuForm.storeId})}" class="btn btn-primary">新しいメニューを追加</a>
+				<a href="/restaurant" class="btn btn-primary">戻る</a>
+			</div>
+		</div>
+
+		<div th:if="${menuForm.menuDtoList.size() == 0}">
+			<p>メニューがありません。</p>
+		</div>
+		
+
+		<div th:each="menu : ${menuForm.menuDtoList}" class="menu-card row align-items-center">
+			<div class="col-md-3 text-center">
+				<img th:src="@{'/images/' + ${menu.menuImage}}" alt="メニュー画像" class="menu-image img-fluid" />
+			</div>
+			<div class="col-md-7">
+				<h3 class="menu-name fs-2" th:text="${menu.menu}">メニュー名</h3>
+				<p class="menu-description fs-6" th:utext="${menu.content}">メニュー説明</p>
+			</div>
+			<div class="col-md-2 text-end ">
+				<p class="menu-price" th:text="${menu.price} + ' 円'">1000 円</p>
+				
+				<button class="btn btn-outline-danger btn-sm mt-2"
+					th:onclick="|if(confirm('削除しますか？')) location.href='@{/menu/delete/{storeId}/{menuId}(storeId=${menuForm.storeId}, menuId=${menu.id})}'|"
+					th:if="${menuForm.permission == 1}">
+					削除
+				</button>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

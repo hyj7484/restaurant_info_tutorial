@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>店を登録する</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h2 class="mb-4">新しいメニューを登録</h2>
+
+		<form th:action="@{/menu/new/{storeId}(storeId=${menuForm.storeId})}" method="post" enctype="multipart/form-data" th:object="${menuForm.menuDto}">
+		  <div class="mb-3">
+		    <label class="form-label">店名</label>
+			<span th:text="${menuForm.storeDto.storeName}"></span>
+		  </div>
+
+		  <div class="mb-3">
+		    <label class="form-label">メニュー名</label>
+		    <input type="text" class="form-control" th:field="*{menu}" required>
+		  </div>
+		  
+		  <div class="mb-3">
+		    <label class="form-label">価格</label>
+		    <input type="number" class="form-control" th:field="*{price}" required>
+		  </div>
+		  <div class="mb-3">
+		    <label class="form-label">紹介文</label>
+		    <textarea class="form-control" th:field="*{content}" rows="3"></textarea>
+		  </div>
+
+		  <div class="mb-3">
+		    <label class="form-label">メニューイメージ</label>
+		    <input type="file" class="form-control" name="storeImgFile" th:field="${menuForm.menuImgFile}" accept="image/*">
+		  </div>		  
+		  <div class="d-flex justify-content-end gap-2">
+		    <button type="submit" class="btn btn-success">登録</button>
+		    <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/restaurant}'|">戻る</button>
+		  </div>
+		</form>
+
+	</div>
+</body>
+
+</html>

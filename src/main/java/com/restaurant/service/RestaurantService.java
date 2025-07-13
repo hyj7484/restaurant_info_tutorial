@@ -7,7 +7,7 @@ public interface RestaurantService {
 	
 	public boolean insertRestaurant(RestaurantForm restaurantForm) throws Exception;
 	
-	public boolean deleteRestaurant(String id) throws Exception;
+	public boolean deleteRestaurant(int  id) throws Exception;
 	
 	public boolean editRestaurantInit(RestaurantForm restaurantForm) throws Exception;
 	

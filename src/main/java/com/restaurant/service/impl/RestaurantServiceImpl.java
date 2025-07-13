@@ -1,7 +1,7 @@
 package com.restaurant.service.impl;
 
-
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +19,23 @@ import com.restaurant.service.RestaurantService;
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 
-	
 	@Autowired
 	RestaurantRepository repository;
-	
+
 	public boolean init(@ModelAttribute RestaurantForm form) throws Exception {
 		List<StoreDto> storeDtoList = null;
-		switch(form.getPermission()) {
-		case 1 :
+		switch (form.getPermission()) {
+		case 1:
 			storeDtoList = repository.getStoreByAdminId(form.getAdminId());
 			break;
-		case 2 :
+		case 2:
 			storeDtoList = repository.getStoreAll();
 			break;
-		default :
+		default:
 			return true;
 		}
-		
-		for(StoreDto dto : storeDtoList) {
+
+		for (StoreDto dto : storeDtoList) {
 			dto.setStoreContent(dto.getStoreContent().replace("\r\n", "<br />"));
 		}
 		form.setRestaurantDtoList(storeDtoList);
@@ -45,41 +44,81 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Transactional
 	public boolean insertRestaurant(RestaurantForm restaurantForm) throws Exception {
-		// TODO Auto-generated method stub
+		saveFile(restaurantForm);
+
 		int cnt = repository.insertRestaurant(restaurantForm);
-		if(cnt == 0) {
+		if (cnt == 0) {
 			return true;
 		}
-		
-		MultipartFile file = restaurantForm.getStoreImgFile();
-		String filePath = Constants.FILE_SAVE_PATH + restaurantForm.getStoreDto().getStoreImage();
-		
-		file.transferTo(new File(filePath));
-		
+
 		return false;
 	}
 
 	@Transactional
-	public boolean deleteRestaurant(String id) throws Exception {
+	public boolean deleteRestaurant(int id) throws Exception {
+		StoreDto dto = repository.getStoreByPK(id);
+		String filePath = Constants.FILE_SAVE_PATH + dto.getStoreImage();
+		File imgFile = new File(filePath);
+		if(imgFile.exists()) {
+			imgFile.delete();
+		}
+		
 		int cnt = repository.deleteRestaurant(id);
-		if(cnt != 1) {
+		if (cnt != 1) {
 			throw new RuntimeException("削除エラーです。");
 		}
 		return false;
 	}
-	
-	public boolean editRestaurantInit(RestaurantForm form) throws Exception{
+
+	public boolean editRestaurantInit(RestaurantForm form) throws Exception {
 		StoreDto dto = repository.getStoreByPK(form.getId());
 		form.setStoreDto(dto);
 		return false;
 	}
-	
+
 	@Transactional
-	public boolean editRestaurant(RestaurantForm form) throws Exception{
+	public boolean editRestaurant(RestaurantForm form) throws Exception {
+		if(!form.getStoreImgFile().getOriginalFilename().isEmpty()) {
+			StoreDto dto = repository.getStoreByPK(form.getId());
+			String filePath = Constants.FILE_SAVE_PATH + dto.getStoreImage();
+			File imgFile = new File(filePath);
+			if(imgFile.exists()) {
+				imgFile.delete();
+			}
+		}
+		saveFile(form);
+
 		int cnt = repository.updateStoreByPk(form);
-		if(cnt == 0) {
+		if (cnt == 0) {
 			throw new RuntimeException("更新に失敗しましｋた。");
 		}
 		return false;
 	}
+	
+	private boolean saveFile(RestaurantForm form) throws IllegalStateException, IOException {
+		MultipartFile file = form.getStoreImgFile();
+		if (!file.getOriginalFilename().isEmpty()) {
+
+			String imgFileName = form.getStoreDto().getStoreImage();
+			int lastIndex = imgFileName.lastIndexOf(".");
+			imgFileName = imgFileName.substring(0, lastIndex);
+			String filePath = Constants.FILE_SAVE_PATH + imgFileName;
+			File imgFile = new File(filePath + ".jpg");
+			int index = 0;
+			do {
+				if (imgFile.exists()) {
+					String filePathChange = String.format("%s_%d", filePath, index);
+					imgFile = new File(filePathChange + ".jpg");
+					form.getStoreDto().setStoreImage(String.format("%s_%d.jpg", imgFileName, index));
+					index++;
+				} else {
+					break;
+				}
+			} while (true);
+			file.transferTo(imgFile);
+		}
+
+		return true;
+	}
+
 }

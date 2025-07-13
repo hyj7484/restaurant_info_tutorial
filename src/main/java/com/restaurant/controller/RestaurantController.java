@@ -51,8 +51,8 @@ public class RestaurantController {
 		return ConstantsPath.REDIRECT_RESTAURANT;
 	}
 	
-	@GetMapping("/restaurant/delete/{id}")
-	public String deleteReastaurant(@PathVariable("id") String id) throws Exception {
+	@GetMapping("/restaurant/delete/{id:\\d+}")
+	public String deleteReastaurant(@PathVariable("id") int id) throws Exception {
 		service.deleteRestaurant(id);
 		return ConstantsPath.REDIRECT_RESTAURANT;
 	}

@@ -9,4 +9,5 @@ public class MenuDto {
 	private String menu;
 	private int price;
 	private String content;
+	private String menuImage;
 }
