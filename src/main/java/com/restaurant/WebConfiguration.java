@@ -1,12 +1,16 @@
-package com.restaurant.interceptor;
+package com.restaurant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.restaurant.constants.Constants;
+import com.restaurant.interceptor.LoginInterceptor;
+
 @Configuration
-public class WebMvnConfiguration implements WebMvcConfigurer {
+public class WebConfiguration implements WebMvcConfigurer {
 	
 	@Autowired
 	LoginInterceptor loginInterceptor;
@@ -22,5 +26,9 @@ public class WebMvnConfiguration implements WebMvcConfigurer {
 		.addPathPatterns("/**"); // interceptor対象パス
 	}
 	
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations(String.format("file:///%s", Constants.FILE_SAVE_PATH).replace("\\", "/"));
+    }
 
 }

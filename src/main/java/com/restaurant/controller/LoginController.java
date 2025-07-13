@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.restaurant.constants.ConstantsPath;
 import com.restaurant.form.LoginForm;
 import com.restaurant.service.LoginService;
 
@@ -21,9 +22,13 @@ public class LoginController {
 	LoginService service;
 	
 	@GetMapping("/login")
-	public String init(@ModelAttribute LoginForm loginForm, Model model) {
+	public String init(@ModelAttribute LoginForm loginForm, HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+		if(session.getAttribute("id") != null) {
+			return ConstantsPath.REDIRECT_RESTAURANT;
+		}
 		model.addAttribute(loginForm);
-		return "login";
+		return ConstantsPath.LOGIN;
 	}
 	
 	
@@ -32,19 +37,19 @@ public class LoginController {
 		HttpSession session = request.getSession();
 		if(service.login(loginForm)) {
 			loginForm.setError(true);
-			return "login";
+			return ConstantsPath.LOGIN;
 		}
 		session.setAttribute("id", loginForm.getId());
 		session.setAttribute("userName", loginForm.getUserName());
 		session.setAttribute("permission", loginForm.getPermission());
 		
-		return "redirect:/restaurant";
+		return ConstantsPath.REDIRECT_RESTAURANT;
 	}
 	
 	@GetMapping("/register")
 	public String register(@ModelAttribute LoginForm loginForm, Model model) {
 		model.addAttribute(model);
-		return "register";
+		return ConstantsPath.REGISTER;
 	}
 	
 	@PostMapping("/register")
@@ -53,7 +58,13 @@ public class LoginController {
 			return register(loginForm, model);
 		}
 		
-		return init(loginForm, model);
+		return init(loginForm, request, model);
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return ConstantsPath.REDIRECT_LOGIN;
 	}
 
 }

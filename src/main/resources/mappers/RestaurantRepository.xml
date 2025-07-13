@@ -22,6 +22,15 @@
 		store
 	</select>
 	
+	<select id="getStoreByPK" resultMap="store">
+    SELECT 
+    	*
+    FROM 
+    	store
+    WHERE 
+    	id = #{id}
+</select>
+	
 	<select id="getStoreByAdminId" resultMap="store">
 	SELECT
 		*
@@ -30,5 +39,54 @@
 	WHERE
 		admin_id = #{adminId}
 	</select>
+	
+	<insert id="insertRestaurant">
+	INSERT INTO
+	store(
+		store_name,
+		business_time_start,
+		business_time_end,
+		store_content,
+		admin_id,
+		address,
+		phone,
+		store_image
+	)
+	VALUES(
+		#{storeDto.storeName},
+		#{storeDto.businessTimeStart},
+		#{storeDto.businessTimeEnd},
+		#{storeDto.storeContent},
+		#{adminId},
+		#{storeDto.address},
+		#{storeDto.phone},
+		#{storeDto.storeImage}
+	)
+	</insert>
+	
+	<update id="updateStoreByPk">
+	UPDATE
+		store
+	SET
+		store_name = #{storeDto.storeName},
+		business_time_start = #{storeDto.businessTimeStart},
+		business_time_end = #{storeDto.businessTimeEnd},
+		store_content = #{storeDto.storeContent},
+		address = #{storeDto.address},
+		phone = #{storeDto.phone}
+		<if test="storeDto.storeImage != null and storeDto.storeImage != ''">
+			,store_image = #{storeDto.storeImage}
+		</if>
+	WHERE
+		id = #{id}
+	</update>
+	
+	<delete id="deleteRestaurant">
+	DELETE FROM
+		store
+	WHERE
+		id = #{id}
+	</delete>
+	
 	
 </mapper>
