@@ -15,46 +15,47 @@ import com.restaurant.form.MenuForm;
 import com.restaurant.repository.MenuRepository;
 import com.restaurant.service.MenuService;
 
-
 @Service
 public class MenuServiceImpl implements MenuService {
 
 	@Autowired
 	MenuRepository repository;
-	
+
 	public void init(MenuForm form) throws Exception {
 		List<MenuDto> menuDtoList = repository.getMenuByStoreId(form.getStoreId());
 		StoreDto storeDto = repository.getStoreNameByStoreId(form.getStoreId());
-		
+
 		for (MenuDto dto : menuDtoList) {
 			dto.setContent(dto.getContent().replace("\r\n", "<br />"));
 		}
 		form.setMenuDtoList(menuDtoList);
 		form.setStoreDto(storeDto);
 	}
-	
-	public void insertMenuInit(MenuForm form) throws Exception{
+
+	public void insertMenuInit(MenuForm form) throws Exception {
 		StoreDto storeDto = repository.getStoreNameByStoreId(form.getStoreId());
-		
+
 		form.setStoreDto(storeDto);
 	}
-	
-	public void insertMenu(MenuForm form) throws Exception{
+
+	public void insertMenu(MenuForm form) throws Exception {
 		saveFile(form);
 		int cnt = repository.insertMenu(form);
-		if(cnt == 0) {
+		if (cnt == 0) {
 			throw new Exception("メニュー登録に失敗しました。");
 		}
 	}
-	
-	public void deleteMenu(MenuForm form) throws Exception{
+
+	public void deleteMenu(MenuForm form) throws Exception {
 		MenuDto dto = repository.getMenuByPK(form.getMenuId());
-		String filePath = Constants.FILE_SAVE_PATH + dto.getMenuImage();
-		File imgFile = new File(filePath);
-		if(imgFile.exists()) {
-			imgFile.delete();
+		if (!dto.getMenuImage().isEmpty()) {
+			String filePath = Constants.FILE_SAVE_PATH + dto.getMenuImage();
+			File imgFile = new File(filePath);
+			if (imgFile.exists()) {
+				imgFile.delete();
+			}
 		}
-		
+
 		int cnt = repository.deleteMenu(form.getMenuId());
 		if (cnt != 1) {
 			throw new RuntimeException("削除エラーです。");

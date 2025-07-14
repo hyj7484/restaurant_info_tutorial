@@ -57,12 +57,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional
 	public boolean deleteRestaurant(int id) throws Exception {
 		StoreDto dto = repository.getStoreByPK(id);
-		String filePath = Constants.FILE_SAVE_PATH + dto.getStoreImage();
-		File imgFile = new File(filePath);
-		if(imgFile.exists()) {
-			imgFile.delete();
+		if (!dto.getStoreImage().isEmpty()) {
+			String filePath = Constants.FILE_SAVE_PATH + dto.getStoreImage();
+			File imgFile = new File(filePath);
+			if (imgFile.exists()) {
+				imgFile.delete();
+			}
 		}
-		
+
 		int cnt = repository.deleteRestaurant(id);
 		if (cnt != 1) {
 			throw new RuntimeException("削除エラーです。");
@@ -78,14 +80,15 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Transactional
 	public boolean editRestaurant(RestaurantForm form) throws Exception {
-		if(!form.getStoreImgFile().getOriginalFilename().isEmpty()) {
-			StoreDto dto = repository.getStoreByPK(form.getId());
+		StoreDto dto = repository.getStoreByPK(form.getId());
+		if (!dto.getStoreImage().isEmpty()) {
 			String filePath = Constants.FILE_SAVE_PATH + dto.getStoreImage();
 			File imgFile = new File(filePath);
-			if(imgFile.exists()) {
+			if (imgFile.exists()) {
 				imgFile.delete();
 			}
 		}
+
 		saveFile(form);
 
 		int cnt = repository.updateStoreByPk(form);
@@ -94,7 +97,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		}
 		return false;
 	}
-	
+
 	private boolean saveFile(RestaurantForm form) throws IllegalStateException, IOException {
 		MultipartFile file = form.getStoreImgFile();
 		if (!file.getOriginalFilename().isEmpty()) {
