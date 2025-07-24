@@ -91,7 +91,7 @@
 						th:onclick="|location.href='@{/restaurant/edit/{id}(id=${restaurant.id})}'|">
 						編集
 					</button>
-					<button class="btn btn-outline-secondary btn-sm mx-1" onclick="event.stopPropagation()"
+					<button class="btn btn-outline-danger btn-sm mx-1" onclick="event.stopPropagation()"
 						th:onclick="|if(confirm('削除しますか？')) location.href='@{/restaurant/delete/{id}(id=${restaurant.id})}'|">
 						削除
 					</button>
