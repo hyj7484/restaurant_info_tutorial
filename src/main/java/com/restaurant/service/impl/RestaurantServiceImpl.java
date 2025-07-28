@@ -108,6 +108,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 			String filePath = Constants.FILE_SAVE_PATH + imgFileName;
 			File imgFile = new File(filePath + ".jpg");
 			int index = 0;
+			form.getStoreDto().setStoreImage(imgFileName + ".jpg");
 			do {
 				if (imgFile.exists()) {
 					String filePathChange = String.format("%s_%d", filePath, index);

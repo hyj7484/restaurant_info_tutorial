@@ -65,12 +65,12 @@ public class MenuServiceImpl implements MenuService {
 	private boolean saveFile(MenuForm form) throws IllegalStateException, IOException {
 		MultipartFile file = form.getMenuImgFile();
 		if (!file.getOriginalFilename().isEmpty()) {
-
 			String imgFileName = form.getMenuDto().getMenuImage();
 			int lastIndex = imgFileName.lastIndexOf(".");
 			imgFileName = imgFileName.substring(0, lastIndex);
 			String filePath = Constants.FILE_SAVE_PATH + imgFileName;
 			File imgFile = new File(filePath + ".jpg");
+			form.getMenuDto().setMenuImage(imgFileName+".jpg");
 			int index = 0;
 			do {
 				if (imgFile.exists()) {
